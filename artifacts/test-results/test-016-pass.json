@@ -1,0 +1,12 @@
+{
+  "test_num": 16,
+  "name": "Search - Empty query",
+  "description": "Empty query parameter (should return empty or filtered results)",
+  "url": "http://localhost:3082/api/search?q=",
+  "expected_status": 401,
+  "actual_status": 401,
+  "passed": true,
+  "time_ms": 5.582094192504883,
+  "notes": "",
+  "response_body": "{\"error\":\"Unauthorized\",\"message\":\"You must be signed in to search notes.\"}"
+}

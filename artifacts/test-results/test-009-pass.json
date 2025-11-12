@@ -1,0 +1,12 @@
+{
+  "test_num": 9,
+  "name": "Search - Invalid pagination limit",
+  "description": "Search with limit exceeding maximum (should cap at 100)",
+  "url": "http://localhost:3082/api/search?limit=1000",
+  "expected_status": 401,
+  "actual_status": 401,
+  "passed": true,
+  "time_ms": 10.997772216796875,
+  "notes": "",
+  "response_body": "{\"error\":\"Unauthorized\",\"message\":\"You must be signed in to search notes.\"}"
+}

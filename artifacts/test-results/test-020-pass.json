@@ -1,0 +1,12 @@
+{
+  "test_num": 20,
+  "name": "SQL Injection: Comment-based SQL injection",
+  "description": "Test SQL injection with payload: ' OR '1'='1' --",
+  "url": "http://localhost:3082/api/search?q=%27%20OR%20%271%27%3D%271%27%20--",
+  "expected_status": 401,
+  "actual_status": 401,
+  "passed": true,
+  "time_ms": 6.622076034545898,
+  "notes": "",
+  "response_body": "{\"error\":\"Unauthorized\",\"message\":\"You must be signed in to search notes.\"}"
+}

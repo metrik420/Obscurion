@@ -1,0 +1,12 @@
+{
+  "test_num": 27,
+  "name": "XSS Prevention: Iframe injection",
+  "description": "Test XSS prevention with payload: <iframe src='javascript:alert(1)'>",
+  "url": "http://localhost:3082/api/search?q=%3Ciframe%20src%3D%27javascript%3Aalert%281%29%27%3E",
+  "expected_status": 401,
+  "actual_status": 401,
+  "passed": true,
+  "time_ms": 5.826473236083984,
+  "notes": "",
+  "response_body": "{\"error\":\"Unauthorized\",\"message\":\"You must be signed in to search notes.\"}"
+}

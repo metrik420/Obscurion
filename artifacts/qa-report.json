@@ -1,0 +1,135 @@
+{
+  "summary": {
+    "timestamp": "2025-11-11T10:12:06.667634",
+    "base_url": "http://localhost:3082",
+    "test_user": "qatest_1762881126@example.com",
+    "total_tests": 15,
+    "passed": 9,
+    "failed": 3,
+    "warnings": 3,
+    "verdict": "WARN - NEEDS FIXES"
+  },
+  "tests": [
+    {
+      "name": "API Health Check",
+      "status": "PASS",
+      "details": "Health endpoint responding",
+      "evidence": "",
+      "timestamp": "2025-11-11T10:12:06.672534"
+    },
+    {
+      "name": "Protected route redirect",
+      "status": "PASS",
+      "details": "Dashboard redirects to signin when unauthenticated",
+      "evidence": "",
+      "timestamp": "2025-11-11T10:12:09.790823"
+    },
+    {
+      "name": "Signup page loads",
+      "status": "PASS",
+      "details": "",
+      "evidence": "",
+      "timestamp": "2025-11-11T10:12:11.493376"
+    },
+    {
+      "name": "User signup",
+      "status": "PASS",
+      "details": "Redirected to: http://localhost:3082/auth/signin?message=Account%20created",
+      "evidence": "",
+      "timestamp": "2025-11-11T10:12:14.576536"
+    },
+    {
+      "name": "User signin",
+      "status": "PASS",
+      "details": "Successfully logged in",
+      "evidence": "",
+      "timestamp": "2025-11-11T10:12:19.568803"
+    },
+    {
+      "name": "Dashboard page loads",
+      "status": "PASS",
+      "details": "",
+      "evidence": "",
+      "timestamp": "2025-11-11T10:12:22.356148"
+    },
+    {
+      "name": "Navigation menu on dashboard",
+      "status": "WARN",
+      "details": "Missing: Obscurion branding, Logout button",
+      "evidence": "",
+      "timestamp": "2025-11-11T10:12:22.408318"
+    },
+    {
+      "name": "Navigation menu on create_note",
+      "status": "FAIL",
+      "details": "Missing: Obscurion branding, Dashboard link, Notes link, Search link, Logout button",
+      "evidence": "",
+      "timestamp": "2025-11-11T10:12:25.378168"
+    },
+    {
+      "name": "Note creation",
+      "status": "WARN",
+      "details": "Note may have been created but URL didn't change",
+      "evidence": "",
+      "timestamp": "2025-11-11T10:12:29.407730"
+    },
+    {
+      "name": "Navigation menu on notes_list",
+      "status": "FAIL",
+      "details": "Missing: Obscurion branding, Dashboard link, Search link, Logout button",
+      "evidence": "",
+      "timestamp": "2025-11-11T10:12:32.603878"
+    },
+    {
+      "name": "Notes list table",
+      "status": "PASS",
+      "details": "Table element found",
+      "evidence": "",
+      "timestamp": "2025-11-11T10:12:32.608534"
+    },
+    {
+      "name": "Notes list shows created note",
+      "status": "WARN",
+      "details": "Test note not visible in list",
+      "evidence": "",
+      "timestamp": "2025-11-11T10:12:32.613536"
+    },
+    {
+      "name": "Navigation menu on search_page",
+      "status": "FAIL",
+      "details": "Missing: Obscurion branding, Dashboard link, Notes link, Search link, Logout button",
+      "evidence": "",
+      "timestamp": "2025-11-11T10:12:35.551934"
+    },
+    {
+      "name": "Search input field",
+      "status": "PASS",
+      "details": "Search input found",
+      "evidence": "",
+      "timestamp": "2025-11-11T10:12:35.559339"
+    },
+    {
+      "name": "Search functionality",
+      "status": "PASS",
+      "details": "Search executed successfully",
+      "evidence": "",
+      "timestamp": "2025-11-11T10:12:37.796823"
+    }
+  ],
+  "screenshots": [
+    "/home/metrik/docker/Obscurion/artifacts/selenium/signup_page_initial_1762881131.png",
+    "/home/metrik/docker/Obscurion/artifacts/selenium/signin_page_initial_1762881136.png",
+    "/home/metrik/docker/Obscurion/artifacts/selenium/dashboard_main_1762881142.png",
+    "/home/metrik/docker/Obscurion/artifacts/selenium/create_note_initial_1762881145.png",
+    "/home/metrik/docker/Obscurion/artifacts/selenium/nav_missing_create_note_navigation_1762881145.png",
+    "/home/metrik/docker/Obscurion/artifacts/selenium/note_creation_ambiguous_warning_1762881149.png",
+    "/home/metrik/docker/Obscurion/artifacts/selenium/notes_list_main_1762881152.png",
+    "/home/metrik/docker/Obscurion/artifacts/selenium/nav_missing_notes_list_navigation_1762881152.png",
+    "/home/metrik/docker/Obscurion/artifacts/selenium/search_page_main_1762881155.png",
+    "/home/metrik/docker/Obscurion/artifacts/selenium/nav_missing_search_page_navigation_1762881155.png",
+    "/home/metrik/docker/Obscurion/artifacts/selenium/search_results_after_search_1762881157.png"
+  ],
+  "console_errors": {
+    "dashboard": []
+  }
+}

@@ -1,0 +1,391 @@
+
+============================================================
+[0;34mCOMPREHENSIVE API TEST SUITE[0m
+[0;34mPhase 2 Search & Filtering[0m
+============================================================
+Base URL: http://localhost:3082
+Timestamp: 2025-11-12 12:45:04
+============================================================
+
+============================================================
+[0;34mAPI ENDPOINT TESTING SUITE[0m
+============================================================
+
+============================================================
+TEST #1: Health Check
+Description: Verify API is running and healthy
+URL: http://localhost:3082/api/health
+Expected Status: 200
+------------------------------------------------------------
+Status Code: 200
+Response Time: 7.87ms
+[0;32m✓ PASS[0m
+Notes: Validation passed
+
+============================================================
+TEST #2: Search - Basic query
+Description: Search with query parameter only (unauthenticated)
+URL: http://localhost:3082/api/search?q=test
+Expected Status: 401
+Note: This test expects 401 Unauthorized (no auth provided)
+------------------------------------------------------------
+Status Code: 401
+Response Time: 8.05ms
+[0;32m✓ PASS[0m
+
+============================================================
+TEST #3: Search - Status filter
+Description: Filter by ACTIVE status (unauthenticated)
+URL: http://localhost:3082/api/search?status=ACTIVE
+Expected Status: 401
+Note: This test expects 401 Unauthorized (no auth provided)
+------------------------------------------------------------
+Status Code: 401
+Response Time: 8.64ms
+[0;32m✓ PASS[0m
+
+============================================================
+TEST #4: Search - Multiple tags
+Description: Filter by multiple tags (unauthenticated)
+URL: http://localhost:3082/api/search?tags=javascript,react
+Expected Status: 401
+Note: This test expects 401 Unauthorized (no auth provided)
+------------------------------------------------------------
+Status Code: 401
+Response Time: 6.56ms
+[0;32m✓ PASS[0m
+
+============================================================
+TEST #5: Search - Pinned filter
+Description: Filter by pinned notes only (unauthenticated)
+URL: http://localhost:3082/api/search?pinned=true
+Expected Status: 401
+Note: This test expects 401 Unauthorized (no auth provided)
+------------------------------------------------------------
+Status Code: 401
+Response Time: 8.29ms
+[0;32m✓ PASS[0m
+
+============================================================
+TEST #6: Search - Combined filters
+Description: Search with all filters combined (unauthenticated)
+URL: http://localhost:3082/api/search?q=test&status=ACTIVE&tags=javascript&pinned=true
+Expected Status: 401
+Note: This test expects 401 Unauthorized (no auth provided)
+------------------------------------------------------------
+Status Code: 401
+Response Time: 7.13ms
+[0;32m✓ PASS[0m
+
+============================================================
+TEST #7: Search - Empty query with filters
+Description: Filter without search query (Phase 2 feature)
+URL: http://localhost:3082/api/search?status=ACTIVE
+Expected Status: 401
+Note: This test expects 401 Unauthorized (no auth provided)
+------------------------------------------------------------
+Status Code: 401
+Response Time: 7.62ms
+[0;32m✓ PASS[0m
+
+============================================================
+TEST #8: Search - Pagination
+Description: Search with pagination parameters
+URL: http://localhost:3082/api/search?q=test&page=1&limit=20
+Expected Status: 401
+Note: This test expects 401 Unauthorized (no auth provided)
+------------------------------------------------------------
+Status Code: 401
+Response Time: 15.96ms
+[0;32m✓ PASS[0m
+
+============================================================
+TEST #9: Search - Invalid pagination limit
+Description: Search with limit exceeding maximum (should cap at 100)
+URL: http://localhost:3082/api/search?limit=1000
+Expected Status: 401
+Note: This test expects 401 Unauthorized (no auth provided)
+------------------------------------------------------------
+Status Code: 401
+Response Time: 11.00ms
+[0;32m✓ PASS[0m
+
+============================================================
+TEST #10: Search - Negative pagination
+Description: Negative pagination values (should default to valid values)
+URL: http://localhost:3082/api/search?page=-1&limit=-10
+Expected Status: 401
+Note: This test expects 401 Unauthorized (no auth provided)
+------------------------------------------------------------
+Status Code: 401
+Response Time: 7.91ms
+[0;32m✓ PASS[0m
+
+============================================================
+TEST #11: Search - Zero pagination
+Description: Zero pagination values (should default to valid values)
+URL: http://localhost:3082/api/search?page=0&limit=0
+Expected Status: 401
+Note: This test expects 401 Unauthorized (no auth provided)
+------------------------------------------------------------
+Status Code: 401
+Response Time: 8.28ms
+[0;32m✓ PASS[0m
+
+============================================================
+TEST #12: Search - Invalid status
+Description: Invalid status value (should be ignored or rejected)
+URL: http://localhost:3082/api/search?status=INVALID
+Expected Status: 401
+Note: This test expects 401 Unauthorized (no auth provided)
+------------------------------------------------------------
+Status Code: 401
+Response Time: 29.13ms
+[0;32m✓ PASS[0m
+
+============================================================
+TEST #13: Search - Multiple status filters
+Description: Multiple status parameters (last one should win)
+URL: http://localhost:3082/api/search?status=ACTIVE&status=DRAFT
+Expected Status: 401
+Note: This test expects 401 Unauthorized (no auth provided)
+------------------------------------------------------------
+Status Code: 401
+Response Time: 11.10ms
+[0;32m✓ PASS[0m
+
+============================================================
+TEST #14: Filters - Get available filters
+Description: Retrieve available filter options (unauthenticated)
+URL: http://localhost:3082/api/filters
+Expected Status: 401
+Note: This test expects 401 Unauthorized (no auth provided)
+------------------------------------------------------------
+Status Code: 404 (Expected: 401)
+Response Time: 29.27ms
+[0;31m✗ FAIL[0m
+Response Body: <!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="/_next/static/css/9ec4778b3480546d.css" data-precedence="next"/><link rel="preload" as="script" fetchPriority="low" href="/_next/static/chunks/webpack-1a9f5f0b6ec9894f.js"/><script src="/_next/static/chunks/fd9d1056-48501e1b362c8ea4.js" async=""></script><script src="/_next/static/chunks/117-2ba87807802d064c.js" async=""></script><script sr
+
+============================================================
+TEST #15: Search - Very long query
+Description: 10000 character query (should truncate or handle gracefully)
+URL: http://localhost:3082/api/search?q=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+Expected Status: 401
+Note: This test expects 401 Unauthorized (no auth provided)
+------------------------------------------------------------
+Status Code: 401
+Response Time: 17.30ms
+[0;32m✓ PASS[0m
+
+============================================================
+TEST #16: Search - Empty query
+Description: Empty query parameter (should return empty or filtered results)
+URL: http://localhost:3082/api/search?q=
+Expected Status: 401
+Note: This test expects 401 Unauthorized (no auth provided)
+------------------------------------------------------------
+Status Code: 401
+Response Time: 5.58ms
+[0;32m✓ PASS[0m
+
+============================================================
+TEST #17: Search - Malformed encoding
+Description: Malformed URL encoding (should handle gracefully)
+URL: http://localhost:3082/api/search?q=%ZZ%YY
+Expected Status: 401
+Note: This test expects 401 Unauthorized (no auth provided)
+------------------------------------------------------------
+Status Code: 401
+Response Time: 7.12ms
+[0;32m✓ PASS[0m
+
+============================================================
+[0;34mSECURITY TESTING SUITE[0m
+============================================================
+
+============================================================
+TEST #18: SQL Injection: Basic SQL injection
+Description: Test SQL injection with payload: ' OR '1'='1
+URL: http://localhost:3082/api/search?q=%27%20OR%20%271%27%3D%271
+Expected Status: 401
+Note: This test expects 401 Unauthorized (no auth provided)
+------------------------------------------------------------
+Status Code: 401
+Response Time: 5.26ms
+[0;32m✓ PASS[0m
+
+============================================================
+TEST #19: SQL Injection: SQL drop table attempt
+Description: Test SQL injection with payload: '; DROP TABLE Note; --
+URL: http://localhost:3082/api/search?q=%27%3B%20DROP%20TABLE%20Note%3B%20--
+Expected Status: 401
+Note: This test expects 401 Unauthorized (no auth provided)
+------------------------------------------------------------
+Status Code: 401
+Response Time: 5.87ms
+[0;32m✓ PASS[0m
+
+============================================================
+TEST #20: SQL Injection: Comment-based SQL injection
+Description: Test SQL injection with payload: ' OR '1'='1' --
+URL: http://localhost:3082/api/search?q=%27%20OR%20%271%27%3D%271%27%20--
+Expected Status: 401
+Note: This test expects 401 Unauthorized (no auth provided)
+------------------------------------------------------------
+Status Code: 401
+Response Time: 6.62ms
+[0;32m✓ PASS[0m
+
+============================================================
+TEST #21: SQL Injection: Numeric SQL injection
+Description: Test SQL injection with payload: 1' AND 1=1 --
+URL: http://localhost:3082/api/search?q=1%27%20AND%201%3D1%20--
+Expected Status: 401
+Note: This test expects 401 Unauthorized (no auth provided)
+------------------------------------------------------------
+Status Code: 401
+Response Time: 8.48ms
+[0;32m✓ PASS[0m
+
+============================================================
+TEST #22: SQL Injection: Admin bypass attempt
+Description: Test SQL injection with payload: admin'--
+URL: http://localhost:3082/api/search?q=admin%27--
+Expected Status: 401
+Note: This test expects 401 Unauthorized (no auth provided)
+------------------------------------------------------------
+Status Code: 401
+Response Time: 5.43ms
+[0;32m✓ PASS[0m
+
+============================================================
+TEST #23: XSS Prevention: Basic script tag
+Description: Test XSS prevention with payload: <script>alert('xss')</script>
+URL: http://localhost:3082/api/search?q=%3Cscript%3Ealert%28%27xss%27%29%3C/script%3E
+Expected Status: 401
+Note: This test expects 401 Unauthorized (no auth provided)
+------------------------------------------------------------
+Status Code: 401
+Response Time: 8.44ms
+[0;32m✓ PASS[0m
+
+============================================================
+TEST #24: XSS Prevention: Image onerror handler
+Description: Test XSS prevention with payload: <img src=x onerror='alert(1)'>
+URL: http://localhost:3082/api/search?q=%3Cimg%20src%3Dx%20onerror%3D%27alert%281%29%27%3E
+Expected Status: 401
+Note: This test expects 401 Unauthorized (no auth provided)
+------------------------------------------------------------
+Status Code: 401
+Response Time: 4.43ms
+[0;32m✓ PASS[0m
+
+============================================================
+TEST #25: XSS Prevention: SVG onload handler
+Description: Test XSS prevention with payload: <svg onload=alert('xss')>
+URL: http://localhost:3082/api/search?q=%3Csvg%20onload%3Dalert%28%27xss%27%29%3E
+Expected Status: 401
+Note: This test expects 401 Unauthorized (no auth provided)
+------------------------------------------------------------
+Status Code: 401
+Response Time: 9.42ms
+[0;32m✓ PASS[0m
+
+============================================================
+TEST #26: XSS Prevention: JavaScript protocol
+Description: Test XSS prevention with payload: javascript:alert('xss')
+URL: http://localhost:3082/api/search?q=javascript%3Aalert%28%27xss%27%29
+Expected Status: 401
+Note: This test expects 401 Unauthorized (no auth provided)
+------------------------------------------------------------
+Status Code: 401
+Response Time: 5.92ms
+[0;32m✓ PASS[0m
+
+============================================================
+TEST #27: XSS Prevention: Iframe injection
+Description: Test XSS prevention with payload: <iframe src='javascript:alert(1)'>
+URL: http://localhost:3082/api/search?q=%3Ciframe%20src%3D%27javascript%3Aalert%281%29%27%3E
+Expected Status: 401
+Note: This test expects 401 Unauthorized (no auth provided)
+------------------------------------------------------------
+Status Code: 401
+Response Time: 5.83ms
+[0;32m✓ PASS[0m
+
+============================================================
+TEST #28: Edge Case: Special characters
+Description: Test edge case handling: @#$%^&*()
+URL: http://localhost:3082/api/search?q=%40%23%24%25%5E%26%2A%28%29
+Expected Status: 401
+Note: This test expects 401 Unauthorized (no auth provided)
+------------------------------------------------------------
+Status Code: 401
+Response Time: 5.17ms
+[0;32m✓ PASS[0m
+
+============================================================
+TEST #29: Edge Case: Path traversal attempt
+Description: Test edge case handling: ../../../../etc/passwd
+URL: http://localhost:3082/api/search?q=../../../../etc/passwd
+Expected Status: 401
+Note: This test expects 401 Unauthorized (no auth provided)
+------------------------------------------------------------
+Status Code: 401
+Response Time: 5.84ms
+[0;32m✓ PASS[0m
+
+============================================================
+TEST #30: Edge Case: Expression injection
+Description: Test edge case handling: ${7*7}
+URL: http://localhost:3082/api/search?q=%24%7B7%2A7%7D
+Expected Status: 401
+Note: This test expects 401 Unauthorized (no auth provided)
+------------------------------------------------------------
+Status Code: 401
+Response Time: 5.04ms
+[0;32m✓ PASS[0m
+
+============================================================
+TEST #31: Edge Case: Template injection
+Description: Test edge case handling: {{7*7}}
+URL: http://localhost:3082/api/search?q=%7B%7B7%2A7%7D%7D
+Expected Status: 401
+Note: This test expects 401 Unauthorized (no auth provided)
+------------------------------------------------------------
+Status Code: 401
+Response Time: 5.51ms
+[0;32m✓ PASS[0m
+
+============================================================
+TEST #32: Edge Case: Null byte injection
+Description: Test edge case handling: %00
+URL: http://localhost:3082/api/search?q=%2500
+Expected Status: 401
+Note: This test expects 401 Unauthorized (no auth provided)
+------------------------------------------------------------
+Status Code: 401
+Response Time: 5.63ms
+[0;32m✓ PASS[0m
+
+============================================================
+[0;34mPERFORMANCE TESTING SUITE[0m
+============================================================
+
+Testing concurrent requests (10 parallel)...
+Total time for 10 requests: 59.69ms
+Average time per request: 5.97ms
+Requests per second: 167.53
+[0;32m✓ PASS - Average response time < 100ms[0m
+
+============================================================
+[0;34mTEST SUMMARY[0m
+============================================================
+Total Tests: 33
+Passed: [0;32m32[0m
+Failed: [0;31m1[0m
+Success Rate: 96.97%
+============================================================
+
+JSON report saved to: /home/metrik/docker/Obscurion/artifacts/test-results/api-test-report-20251112_124504.json
+Markdown report saved to: /home/metrik/docker/Obscurion/artifacts/test-results/api-test-report-20251112_124504.md

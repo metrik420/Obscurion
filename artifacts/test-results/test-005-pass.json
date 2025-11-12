@@ -1,0 +1,12 @@
+{
+  "test_num": 5,
+  "name": "Search - Pinned filter",
+  "description": "Filter by pinned notes only (unauthenticated)",
+  "url": "http://localhost:3082/api/search?pinned=true",
+  "expected_status": 401,
+  "actual_status": 401,
+  "passed": true,
+  "time_ms": 8.289337158203125,
+  "notes": "",
+  "response_body": "{\"error\":\"Unauthorized\",\"message\":\"You must be signed in to search notes.\"}"
+}

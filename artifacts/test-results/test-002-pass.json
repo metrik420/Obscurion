@@ -1,0 +1,12 @@
+{
+  "test_num": 2,
+  "name": "Search - Basic query",
+  "description": "Search with query parameter only (unauthenticated)",
+  "url": "http://localhost:3082/api/search?q=test",
+  "expected_status": 401,
+  "actual_status": 401,
+  "passed": true,
+  "time_ms": 8.050918579101562,
+  "notes": "",
+  "response_body": "{\"error\":\"Unauthorized\",\"message\":\"You must be signed in to search notes.\"}"
+}

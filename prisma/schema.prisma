@@ -1,0 +1,192 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  MODERATOR
+  VIP
+  USER
+}
+
+model User {
+  id    String     @id @default(cuid())
+  email String     @unique
+  name  String?
+  password String
+  role  UserRole   @default(USER)
+
+  // Admin control fields
+  isActive       Boolean    @default(true)
+  isSuspended    Boolean    @default(false)
+  suspendedReason String?
+  suspendedAt    DateTime?
+
+  // Legal compliance fields
+  tosAccepted    Boolean    @default(false)
+  tosAcceptedAt  DateTime?
+  agreedToTerms  Boolean    @default(false)
+  agreedToTermsAt DateTime?
+
+  // Data deletion fields
+  dataDeleteRequested   Boolean   @default(false)
+  dataDeleteRequestedAt DateTime?
+
+  // Login tracking
+  lastLogin      DateTime?
+  loginAttempts  Int       @default(0)
+  lastLoginAttempt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  notes          Note[]
+  noteVersions   NoteVersion[]
+  auditLogs      AuditLog[]
+  complianceLogs ComplianceLog[]
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  adminEmail String
+  admin     User     @relation(fields: [adminEmail], references: [email], onDelete: Cascade)
+  action    String   // e.g., "user_suspended", "user_deleted", "role_changed"
+  resourceType String // e.g., "user", "note"
+  resourceId String?
+  details   String   @db.Text // JSON details
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  @@index([adminEmail])
+  @@index([createdAt])
+  @@index([action])
+}
+
+model ComplianceLog {
+  id        String   @id @default(cuid())
+  userEmail String
+  user      User     @relation(fields: [userEmail], references: [email], onDelete: Cascade)
+  event     String   // e.g., "tos_accepted", "deletion_requested", "deletion_completed"
+  details   String   @db.Text // JSON details
+  ipAddress String?
+  createdAt DateTime @default(now())
+
+  @@index([userEmail])
+  @@index([createdAt])
+  @@index([event])
+}
+
+model Note {
+  id        String     @id @default(cuid())
+  title     String
+  content   String     @db.Text
+  type      String     @default("GENERAL")
+  authorEmail String
+  author    User?      @relation(fields: [authorEmail], references: [email], onDelete: Cascade)
+  readingTime Int      @default(0)
+
+  // Search & filtering fields
+  tags      String[]   @default([])
+  status    String     @default("ACTIVE") // ACTIVE, ARCHIVED, DRAFT
+  isPinned  Boolean    @default(false)
+  searchText String?   @db.Text // Denormalized for full-text search
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  categories     NoteCategory[]
+  flashcards     Flashcard[]
+  versions       NoteVersion[]
+  searchHistory  SearchHistory[]
+
+  @@index([authorEmail])
+  @@index([createdAt])
+  @@index([updatedAt])
+  @@index([status])
+  @@index([isPinned])
+}
+
+model Category {
+  id    String     @id @default(cuid())
+  name  String     @unique
+  createdAt DateTime @default(now())
+
+  notes NoteCategory[]
+}
+
+model NoteCategory {
+  id        String  @id @default(cuid())
+  noteId    String
+  categoryId String
+
+  note      Note    @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  category  Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([noteId, categoryId])
+  @@index([noteId])
+  @@index([categoryId])
+}
+
+model Flashcard {
+  id        String     @id @default(cuid())
+  question  String
+  answer    String     @db.Text
+  difficulty String    @default("MEDIUM")
+  noteId    String
+  createdAt DateTime @default(now())
+
+  note      Note @relation(fields: [noteId], references: [id], onDelete: Cascade)
+
+  @@index([noteId])
+}
+
+model NoteVersion {
+  id        String     @id @default(cuid())
+  noteId    String
+  userId    String
+  title     String
+  content   String     @db.Text
+  createdAt DateTime @default(now())
+
+  note      Note  @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  user      User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([noteId])
+  @@index([userId])
+}
+
+model NoteTemplate {
+  id        String     @id @default(cuid())
+  name      String     @unique
+  description String?
+  icon      String?
+  content   String     @db.Text
+  tags      String[]
+  createdAt DateTime @default(now())
+}
+
+model SearchHistory {
+  id        String     @id @default(cuid())
+  userEmail String
+  noteId    String?
+  query     String     // The search query
+  filters   String     @db.Text @default("{}") // JSON filters
+  resultCount Int     @default(0)
+  clicked   Boolean   @default(false) // If user clicked result
+  createdAt DateTime @default(now())
+
+  note      Note?     @relation(fields: [noteId], references: [id], onDelete: SetNull)
+
+  @@index([userEmail])
+  @@index([createdAt])
+  @@index([query])
+}

@@ -1,0 +1,12 @@
+{
+  "test_num": 19,
+  "name": "SQL Injection: SQL drop table attempt",
+  "description": "Test SQL injection with payload: '; DROP TABLE Note; --",
+  "url": "http://localhost:3082/api/search?q=%27%3B%20DROP%20TABLE%20Note%3B%20--",
+  "expected_status": 401,
+  "actual_status": 401,
+  "passed": true,
+  "time_ms": 5.872964859008789,
+  "notes": "",
+  "response_body": "{\"error\":\"Unauthorized\",\"message\":\"You must be signed in to search notes.\"}"
+}

@@ -1,0 +1,12 @@
+{
+  "test_num": 11,
+  "name": "Search - Zero pagination",
+  "description": "Zero pagination values (should default to valid values)",
+  "url": "http://localhost:3082/api/search?page=0&limit=0",
+  "expected_status": 401,
+  "actual_status": 401,
+  "passed": true,
+  "time_ms": 8.282184600830078,
+  "notes": "",
+  "response_body": "{\"error\":\"Unauthorized\",\"message\":\"You must be signed in to search notes.\"}"
+}

@@ -1,0 +1,12 @@
+{
+  "test_num": 6,
+  "name": "Search - Combined filters",
+  "description": "Search with all filters combined (unauthenticated)",
+  "url": "http://localhost:3082/api/search?q=test&status=ACTIVE&tags=javascript&pinned=true",
+  "expected_status": 401,
+  "actual_status": 401,
+  "passed": true,
+  "time_ms": 7.134675979614258,
+  "notes": "",
+  "response_body": "{\"error\":\"Unauthorized\",\"message\":\"You must be signed in to search notes.\"}"
+}

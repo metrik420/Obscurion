@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: obscurion-v2-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: obscurion
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - obscurion-v2-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
+
+  app:
+    build: .
+    container_name: obscurion-v2-app
+    ports:
+      - "3082:3082"
+    env_file:
+      - .env
+      - .env.development.local
+    environment:
+      PORT: 3082
+      HOSTNAME: "0.0.0.0"
+      DATABASE_URL: "postgresql://postgres:password@postgres:5432/obscurion?schema=public"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - obscurion-v2-network
+      - web
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3082/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+    restart: unless-stopped
+
+networks:
+  obscurion-v2-network:
+    name: obscurion-v2-network
+    external: false
+  web:
+    external: true
+
+volumes:
+  postgres_data:
+    driver: local

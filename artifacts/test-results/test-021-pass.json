@@ -1,0 +1,12 @@
+{
+  "test_num": 21,
+  "name": "SQL Injection: Numeric SQL injection",
+  "description": "Test SQL injection with payload: 1' AND 1=1 --",
+  "url": "http://localhost:3082/api/search?q=1%27%20AND%201%3D1%20--",
+  "expected_status": 401,
+  "actual_status": 401,
+  "passed": true,
+  "time_ms": 8.477210998535156,
+  "notes": "",
+  "response_body": "{\"error\":\"Unauthorized\",\"message\":\"You must be signed in to search notes.\"}"
+}

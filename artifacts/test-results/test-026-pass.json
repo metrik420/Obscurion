@@ -1,0 +1,12 @@
+{
+  "test_num": 26,
+  "name": "XSS Prevention: JavaScript protocol",
+  "description": "Test XSS prevention with payload: javascript:alert('xss')",
+  "url": "http://localhost:3082/api/search?q=javascript%3Aalert%28%27xss%27%29",
+  "expected_status": 401,
+  "actual_status": 401,
+  "passed": true,
+  "time_ms": 5.915641784667969,
+  "notes": "",
+  "response_body": "{\"error\":\"Unauthorized\",\"message\":\"You must be signed in to search notes.\"}"
+}

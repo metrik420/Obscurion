@@ -1,0 +1,12 @@
+{
+  "test_num": 32,
+  "name": "Edge Case: Null byte injection",
+  "description": "Test edge case handling: %00",
+  "url": "http://localhost:3082/api/search?q=%2500",
+  "expected_status": 401,
+  "actual_status": 401,
+  "passed": true,
+  "time_ms": 5.627870559692383,
+  "notes": "",
+  "response_body": "{\"error\":\"Unauthorized\",\"message\":\"You must be signed in to search notes.\"}"
+}

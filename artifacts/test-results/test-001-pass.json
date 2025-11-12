@@ -1,0 +1,12 @@
+{
+  "test_num": 1,
+  "name": "Health Check",
+  "description": "Verify API is running and healthy",
+  "url": "http://localhost:3082/api/health",
+  "expected_status": 200,
+  "actual_status": 200,
+  "passed": true,
+  "time_ms": 7.871866226196289,
+  "notes": "Validation passed",
+  "response_body": "{\"status\":\"healthy\",\"timestamp\":\"2025-11-12T17:48:22.351Z\"}"
+}
