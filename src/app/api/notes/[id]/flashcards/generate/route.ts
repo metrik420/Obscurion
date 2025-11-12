@@ -11,6 +11,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { generateFlashcardsFromContent } from '@/lib/flashcardGenerator'
+import { hasPermission } from '@/lib/permissions'
 
 /**
  * POST /api/notes/[id]/flashcards/generate
@@ -33,6 +34,28 @@ export async function POST(
 
     const noteId = params.id
     console.log('[Flashcard Generate] Generating flashcards for note:', noteId)
+
+    // Get user info for permission and ownership check
+    const user = await db.user.findUnique({
+      where: { email: session.user.email },
+      select: { role: true },
+    })
+
+    if (!user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 401 })
+    }
+
+    // Check if user has flashcard generation permission
+    // VIP and ADMIN/MODERATOR can generate, USER can only generate limited flashcards
+    const canGenerate = hasPermission(user.role as any, 'generate', 'flashcards')
+    const canGenerateLimited = hasPermission(user.role as any, 'generate', 'flashcards_limited')
+
+    if (!canGenerate && !canGenerateLimited) {
+      return NextResponse.json(
+        { error: 'Flashcard generation is only available for VIP users' },
+        { status: 403 }
+      )
+    }
 
     // Verify note exists and user owns it
     const note = await db.note.findUnique({

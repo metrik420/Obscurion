@@ -23,6 +23,7 @@ import {
   validateSort,
   isValidId,
 } from '@/lib/validation'
+import { requirePermission, isResourceOwner } from '@/lib/permissions'
 
 /**
  * GET /api/notes
@@ -185,6 +186,28 @@ export async function POST(request: NextRequest) {
 
     const userEmail = session.user.email
     const userId = (session.user as any).id
+
+    // Permission check: get user role
+    const user = await db.user.findUnique({
+      where: { email: userEmail },
+      select: { role: true },
+    })
+
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Unauthorized', message: 'User not found.' },
+        { status: 401 }
+      )
+    }
+
+    // Check if user can create notes
+    const permissionCheck = requirePermission(user.role as any, 'create', 'notes')
+    if (!permissionCheck.allowed) {
+      return NextResponse.json(
+        { error: 'Forbidden', message: permissionCheck.error },
+        { status: 403 }
+      )
+    }
 
     // Parse and validate request body
     const body = await request.json()
@@ -432,7 +455,24 @@ export async function PUT(request: NextRequest) {
       )
     }
 
-    if (existingNote.authorEmail !== userEmail) {
+    // Get user role for permission check
+    const user = await db.user.findUnique({
+      where: { email: userEmail },
+      select: { role: true },
+    })
+
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Unauthorized', message: 'User not found.' },
+        { status: 401 }
+      )
+    }
+
+    // Check permissions: owner can always edit, moderators/admins can edit any note
+    const isOwner = isResourceOwner(userEmail, existingNote.authorEmail)
+    const canEditAnyone = requirePermission(user.role as any, 'edit', 'notes').allowed
+
+    if (!isOwner && !canEditAnyone) {
       return NextResponse.json(
         { error: 'Forbidden', message: 'You do not have permission to update this note.' },
         { status: 403 }
@@ -638,7 +678,24 @@ export async function DELETE(request: NextRequest) {
       )
     }
 
-    if (existingNote.authorEmail !== userEmail) {
+    // Get user role for permission check
+    const user = await db.user.findUnique({
+      where: { email: userEmail },
+      select: { role: true },
+    })
+
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Unauthorized', message: 'User not found.' },
+        { status: 401 }
+      )
+    }
+
+    // Check permissions: owner can always delete own notes, moderators/admins can delete any note
+    const isOwner = isResourceOwner(userEmail, existingNote.authorEmail)
+    const canDeleteAnyone = requirePermission(user.role as any, 'delete', 'notes').allowed
+
+    if (!isOwner && !canDeleteAnyone) {
       return NextResponse.json(
         { error: 'Forbidden', message: 'You do not have permission to delete this note.' },
         { status: 403 }

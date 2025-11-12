@@ -135,6 +135,14 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Validate role
+    if (!['ADMIN', 'MODERATOR', 'VIP', 'USER'].includes(role)) {
+      return NextResponse.json(
+        { error: 'Invalid role. Must be one of: ADMIN, MODERATOR, VIP, USER' },
+        { status: 400 }
+      )
+    }
+
     // Check if user exists
     const existingUser = await db.user.findUnique({
       where: { email }

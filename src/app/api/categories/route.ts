@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/lib/auth'
 import { db } from '@/lib/db'
+import { requirePermission } from '@/lib/permissions'
 
 export const dynamic = 'force-dynamic'
 
@@ -54,6 +55,28 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
+      )
+    }
+
+    // Get user role for permission check
+    const user = await db.user.findUnique({
+      where: { email: session.user.email },
+      select: { role: true },
+    })
+
+    if (!user) {
+      return NextResponse.json(
+        { error: 'User not found' },
+        { status: 401 }
+      )
+    }
+
+    // Check if user can create categories
+    const permissionCheck = requirePermission(user.role as any, 'create', 'categories')
+    if (!permissionCheck.allowed) {
+      return NextResponse.json(
+        { error: 'Forbidden', message: permissionCheck.error },
+        { status: 403 }
       )
     }
 

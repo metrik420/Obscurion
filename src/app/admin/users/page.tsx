@@ -104,6 +104,39 @@ export default function UsersPage() {
     }
   }
 
+  const handleChangeRole = async (userId: string, currentRole: string) => {
+    const newRole = prompt(
+      'Enter new role (ADMIN, MODERATOR, VIP, USER):',
+      currentRole
+    )
+    if (!newRole || newRole === currentRole) return
+
+    const validRoles = ['ADMIN', 'MODERATOR', 'VIP', 'USER']
+    if (!validRoles.includes(newRole)) {
+      alert('Invalid role. Must be one of: ADMIN, MODERATOR, VIP, USER')
+      return
+    }
+
+    try {
+      const res = await fetch(`/api/admin/users/${userId}/role`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ newRole })
+      })
+
+      if (!res.ok) {
+        const error = await res.json()
+        throw new Error(error.error || 'Failed to change role')
+      }
+
+      await fetchUsers()
+      alert('User role changed successfully')
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Failed to change user role')
+      console.error(err)
+    }
+  }
+
   if (loading) return <div className="p-8">Loading...</div>
   if (error) return <div className="p-8 text-red-600">{error}</div>
 
@@ -159,6 +192,7 @@ export default function UsersPage() {
             <tr>
               <th className="px-6 py-3 text-left text-sm font-medium text-gray-900">Email</th>
               <th className="px-6 py-3 text-left text-sm font-medium text-gray-900">Name</th>
+              <th className="px-6 py-3 text-left text-sm font-medium text-gray-900">Role</th>
               <th className="px-6 py-3 text-left text-sm font-medium text-gray-900">Status</th>
               <th className="px-6 py-3 text-left text-sm font-medium text-gray-900">Created</th>
               <th className="px-6 py-3 text-left text-sm font-medium text-gray-900">Actions</th>
@@ -169,6 +203,16 @@ export default function UsersPage() {
               <tr key={user.id} className="hover:bg-gray-50">
                 <td className="px-6 py-3 text-sm text-gray-900">{user.email}</td>
                 <td className="px-6 py-3 text-sm text-gray-600">{user.name || '-'}</td>
+                <td className="px-6 py-3 text-sm">
+                  <span className={`px-3 py-1 text-xs font-medium rounded-full ${
+                    user.role === 'ADMIN' ? 'bg-red-100 text-red-700' :
+                    user.role === 'MODERATOR' ? 'bg-purple-100 text-purple-700' :
+                    user.role === 'VIP' ? 'bg-blue-100 text-blue-700' :
+                    'bg-gray-100 text-gray-700'
+                  }`}>
+                    {user.role}
+                  </span>
+                </td>
                 <td className="px-6 py-3 text-sm">
                   <div className="flex gap-2">
                     {user.isSuspended && (
@@ -197,6 +241,13 @@ export default function UsersPage() {
                   {new Date(user.createdAt).toLocaleDateString()}
                 </td>
                 <td className="px-6 py-3 text-sm space-x-2">
+                  <button
+                    onClick={() => handleChangeRole(user.id, user.role)}
+                    className="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium rounded transition"
+                    title="Change user role"
+                  >
+                    Change Role
+                  </button>
                   {user.isSuspended ? (
                     <button
                       onClick={() => handleUnsuspend(user.id)}
