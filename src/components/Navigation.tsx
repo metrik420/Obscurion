@@ -50,12 +50,15 @@ export default function Navigation() {
 
   /**
    * Handles user logout.
-   * Uses next-auth signOut with redirect to signin page.
+   * Uses next-auth signOut with absolute URL redirect to signin page.
    *
    * @security Clears session server-side; redirects to prevent unauthorized access
    */
   async function handleLogout() {
-    await signOut({ callbackUrl: '/auth/signin' })
+    // Build absolute URL for logout callback to work in Docker/production environments
+    const baseUrl = typeof window !== 'undefined' ? window.location.origin : ''
+    const callbackUrl = `${baseUrl}/auth/signin`
+    await signOut({ callbackUrl })
   }
 
   /**
